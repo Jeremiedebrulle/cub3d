@@ -6,7 +6,7 @@
 /*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 11:56:36 by lecartuy          #+#    #+#             */
-/*   Updated: 2025/08/11 18:42:45 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/12 17:36:37 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,8 @@ static int	validate_player(char **map, t_player *player)
 		{
 			if (ft_strchr("NSWE", map[i][j]))
 			{
-				player->x = (float)j;
-				player->y = (float)i;
+				player->x = (float)j + 0.5f;
+				player->y = (float)i + 0.5f;
 				player->dir = map[i][j];
 				count++;
 			}
@@ -118,6 +118,58 @@ static int	validate_player(char **map, t_player *player)
 // 	}
 // }
 
+/* void	assign_dir_plane_axis(t_player *player)
+{
+	if (player->dir == 'N')
+	{
+		player->dir_y = -1.0f;
+		player->plane_x = 0.66f;
+	}
+	else if (player->dir == 'S')
+	{
+		player->dir_y = 1.0f;
+		player->plane_x = -0.66f;
+	}
+	else if (player->dir == 'E')
+	{
+		player->dir_x = 1.0f;
+		player->plane_y = 0.66f;
+	}
+	else if (player->dir == 'W')
+	{
+		player->dir_x = -1.0f;
+		player->plane_y = -0.66f;
+	}
+} */
+
+void	assign_dir_plane_axis(t_player *player)
+{
+	player->dir_x = 0.0f;
+	player->dir_y = 0.0f;
+	player->plane_x = 0.0f;
+	player->plane_y = 0.0f;
+	if (player->dir == 'N')
+	{
+		player->dir_y = -1.0f;
+		player->plane_x = 0.66f;
+	}
+	else if (player->dir == 'S')
+	{
+		player->dir_y = 1.0f;
+		player->plane_x = -0.66f;
+	}
+	else if (player->dir == 'E')
+	{
+		player->dir_x = 1.0f;
+		player->plane_y = 0.66f;
+	}
+	else if (player->dir == 'W')
+	{
+		player->dir_x = -1.0f;
+		player->plane_y = -0.66f;
+	}
+}
+
 void	validate_map(t_data *data)
 {
 	int	player_count;
@@ -132,4 +184,5 @@ void	validate_map(t_data *data)
 		exit_error(data, NOPLAYER);
 	else if (player_count > 1)
 		exit_error(data, INVPLAYER);
+	assign_dir_plane_axis(&data->player); // j'ai besoin de ceci pour la direction du joueur
 }

@@ -6,7 +6,7 @@
 /*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:16:20 by lecartuy          #+#    #+#             */
-/*   Updated: 2025/08/11 19:02:51 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/12 17:47:48 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # define KEY_RIGHT 65363
 # define KEY_ESC 65307
 # define SIZE 64
+# define SPEED 0.08f
+# define ROT_ANGLE 0.06f
 
 // Error messages
 
@@ -61,6 +63,10 @@ typedef struct s_player
 {
 	float		x;
 	float		y;
+	float		dir_x;
+	float		dir_y;
+	float		plane_x;
+	float		plane_y;
 	char		dir;
 }				t_player;
 
@@ -77,7 +83,7 @@ typedef struct s_config
 typedef struct s_map
 {
 	char 		**lines; // normalized map
-	int		*pixel_map;
+	int			*pixel_map;
 	int			width;
 	int			height;
 	int			start_index;
@@ -89,6 +95,8 @@ typedef struct s_keys
 	int	a;
 	int	s;
 	int	d;
+	int	l;
+	int	r;
 	int	esc;
 }				t_keys;
 
@@ -110,19 +118,22 @@ typedef struct s_data
 	t_map		map;
 	t_player	player;
 	t_minilib	*minilib;
-	t_keys		keys;
+	t_keys		*keys;
 	char		*file_content;
 }				t_data;
 
 //exec
 int	ft_init_minilib(t_data *data);
+int ft_init_keys(t_data *data);
 int	game_on(t_data *data);
 
-void	going_forward(t_data *data);
-void	going_left(t_data *data);
-void	going_backward(t_data *data);
-void	going_right(t_data *data);
+void	going_forward(t_data *data, float speed);
+void	going_left(t_data *data, float speed);
+void	going_backward(t_data *data, float speed);
+void	going_right(t_data *data, float speed);
 
+void	look_left(t_data *data, float rot_angle);
+void	look_right(t_data *data, float rot_angle);
 
 // Init
 

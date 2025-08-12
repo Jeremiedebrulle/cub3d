@@ -6,7 +6,7 @@
 /*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 15:52:27 by jdebrull          #+#    #+#             */
-/*   Updated: 2025/08/11 19:20:19 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:03:06 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,14 @@ void	draw_minimap(t_data *data)
 		x = 0;
 		while (data->map.lines[y][x])
 		{
-			if (data->map.lines[y][x] != '1')
-				color = 0x0000FF00;
+			if (data->map.lines[y][x] == '0' || data->map.lines[y][x] == 'N'
+				|| data->map.lines[y][x] == 'E' || data->map.lines[y][x] == 'S'
+				|| data->map.lines[y][x] == 'W')
+				color = 0x0000FF00; // green
+			else if (data->map.lines[y][x] == '1')
+				color = 0x000000FF; // blue
 			else
-				color = 0x000000FF;
+				color = 0x00000000; // black
 			fill_square(data, x * SIZE, y * SIZE, color);
 			x++;
 		}
@@ -106,16 +110,16 @@ void	draw_player(t_data *data)
 	int	j;
 	int	px;
 	int	py;
-	int	center;
+	int	size;
 
-	j = 0;
-	center = (SIZE / 8) * 3;
-	px = (int)(data->player.x * SIZE) + center;
-	py = (int)(data->player.y * SIZE) + center;
-	while (j < 16)
+	size = SIZE / 16;
+	px = (int)(data->player.x * SIZE);
+	py = (int)(data->player.y * SIZE);
+	j = -size;
+	while (j < size)
 	{
-		i = 0;
-		while (i < 16)
+		i = -size;
+		while (i < size)
 		{
 			ft_mlx_put_pixel(data->minilib, px + i, py + j, 0x00FF0000);
 			i++;
@@ -124,10 +128,35 @@ void	draw_player(t_data *data)
 	}
 }
 
+void	draw_dir(t_data *data)
+{
+	int	px;
+	int	py;
+	int	dx;
+	int	dy;
+	int i;
+	int	len;
+
+	i = 0;
+	dx = 0;
+	dy = 0;
+	len = SIZE / 2; // ca j'ai decider de faire la longeur du laser de dir 
+	px = (int)(data->player.x * SIZE);
+	py = (int)(data->player.y * SIZE);
+	while (i < len)
+	{
+		dx = px + (int)(data->player.dir_x * i);
+		dy = py + (int)(data->player.dir_y * i);
+		ft_mlx_put_pixel(data->minilib, dx, dy, 0x00FF0000);
+		i++;
+	}
+}
+
 void	fill_win(t_data *data)
 {
 	draw_minimap(data);
 	draw_player(data);
+	draw_dir(data);
 	mlx_put_image_to_window(data->minilib->mlx, data->minilib->win, data->minilib->img, 0, 0);
 }
 
@@ -137,78 +166,68 @@ void	mlx_redraw(t_data *data)
 		mlx_destroy_image(data->minilib->mlx, data->minilib->img);
 	data->minilib->img = mlx_new_image(data->minilib->mlx, data->map.width * SIZE, data->map.height * SIZE);
 	data->minilib->addr = mlx_get_data_addr(data->minilib->img, &data->minilib->bpp, &data->minilib->line_length, &data->minilib->endian);
-	fill_win(data);
+	//fill_win(data);
 	mlx_put_image_to_window(data->minilib->mlx, data->minilib->win, data->minilib->img, 0, 0);
 }
 
 int key_press(int keycode, t_data *data)
 {
-    if (keycode == KEY_W)
-        data->keys.w = 1;
-    else if (keycode == KEY_A)
-        data->keys.a = 1;
-    else if (keycode == KEY_S)
-        data->keys.s = 1;
-    else if (keycode == KEY_D)
-        data->keys.d = 1;
-    else if (keycode == KEY_ESC)
-        exit(0);
+	if (!keycode)
+		return (0);
+	else if (keycode == KEY_RIGHT)
+		data->keys->r = 1;
+	else if (keycode == KEY_LEFT)
+		data->keys->l = 1;
+	else if (keycode == KEY_W)
+		data->keys->w = 1;
+	else if (keycode == KEY_A)
+		data->keys->a = 1;
+	else if (keycode == KEY_S)
+		data->keys->s = 1;
+	else if (keycode == KEY_D)
+		data->keys->d = 1;
+	else if (keycode == KEY_ESC)
+		exit(0);
     return (0);
 }
 
 int key_release(int keycode, t_data *data)
 {
-    if (keycode == KEY_W)
-        data->keys.w = 0;
-    else if (keycode == KEY_A)
-        data->keys.a = 0;
-    else if (keycode == KEY_S)
-        data->keys.s = 0;
-    else if (keycode == KEY_D)
-        data->keys.d = 0;
-    return (0);
+	if (!keycode)
+		return (0);
+	else  if (keycode == KEY_RIGHT)
+		data->keys->r = 0;
+	else if (keycode == KEY_LEFT)
+		data->keys->l = 0;
+	else if (keycode == KEY_W)
+		data->keys->w = 0;
+	else if (keycode == KEY_A)
+		data->keys->a = 0;
+	else if (keycode == KEY_S)
+		data->keys->s = 0;
+	else if (keycode == KEY_D)
+		data->keys->d = 0;
+	return (0);
 }
 
 int update(t_data *data)
 {
-	if (data->keys.w)
-		going_forward(data);
-	else if (data->keys.a)
-		going_left(data);
-	else if (data->keys.s)
-		going_backward(data);
-	else if (data->keys.d)
-		going_right(data);
+	if (data->keys->r)
+		look_right(data, ROT_ANGLE);
+	if (data->keys->l)
+		look_left(data, ROT_ANGLE);
+	if (data->keys->w)
+		going_forward(data, SPEED);
+	if (data->keys->a)
+		going_left(data, SPEED);
+	if (data->keys->s)
+		going_backward(data, SPEED);
+	if (data->keys->d)
+		going_right(data, SPEED);
 	fill_win(data);  // redraw minimap + player
 	usleep(10000);
-    return (0);
+	return (0);
 }
-
-
-/* int	key_press(int keycode, t_data *data)
-{
-	if (keycode == KEY_ESC)
-	{
-		ft_printf("Window was closed with <Esc>.\n");
-		//free all
-		exit (0);
-	}
-	else if (keycode == KEY_W)
-		going_forward(data);
-	else if (keycode == KEY_A)
-		going_left(data);
-	else if (keycode == KEY_S)
-		going_backward(data);
-	else if (keycode == KEY_D)
-		going_right(data);
-	else if (keycode == KEY_RIGHT)
-		look_right(data);
-	else if (keycode == KEY_LEFT)
-		look_left(data);
-	//printf("pos x = %d, y = %d\n", data->player->x, data->player->y);
-	mlx_redraw(data);
-	return (1);
-} */
 
 void	mlx_controls(t_data *data)
 {
@@ -221,7 +240,7 @@ void	mlx_controls(t_data *data)
 
 int	game_on(t_data *data)
 {
-	if (!ft_init_minilib(data))
+	if (!ft_init_minilib(data) || !ft_init_keys(data))
 		return (0);
 	ft_mlx_start(data);
 	mlx_controls(data);

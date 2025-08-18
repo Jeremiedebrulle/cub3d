@@ -6,7 +6,7 @@
 /*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 15:52:27 by jdebrull          #+#    #+#             */
-/*   Updated: 2025/08/12 18:03:06 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/18 17:15:25 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	ft_mlx_start(t_data *data)
 		//free_all
 		exit(0);
 	}
-	data->minilib->win = mlx_new_window(data->minilib->mlx, data->map.width * SIZE, data->map.height * SIZE, "cub3D");
+	data->minilib->win = mlx_new_window(data->minilib->mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "cub3D");
 	if (!data->minilib->win)
 	{
 		mlx_destroy_display(data->minilib->mlx);
@@ -157,6 +157,7 @@ void	fill_win(t_data *data)
 	draw_minimap(data);
 	draw_player(data);
 	draw_dir(data);
+	cast_rays(data, &data->player);
 	mlx_put_image_to_window(data->minilib->mlx, data->minilib->win, data->minilib->img, 0, 0);
 }
 
@@ -166,7 +167,6 @@ void	mlx_redraw(t_data *data)
 		mlx_destroy_image(data->minilib->mlx, data->minilib->img);
 	data->minilib->img = mlx_new_image(data->minilib->mlx, data->map.width * SIZE, data->map.height * SIZE);
 	data->minilib->addr = mlx_get_data_addr(data->minilib->img, &data->minilib->bpp, &data->minilib->line_length, &data->minilib->endian);
-	//fill_win(data);
 	mlx_put_image_to_window(data->minilib->mlx, data->minilib->win, data->minilib->img, 0, 0);
 }
 
@@ -242,6 +242,7 @@ int	game_on(t_data *data)
 {
 	if (!ft_init_minilib(data) || !ft_init_keys(data))
 		return (0);
+	ft_init_rays(data);
 	ft_mlx_start(data);
 	mlx_controls(data);
 	//pixel_map(data);

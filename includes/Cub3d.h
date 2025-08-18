@@ -6,7 +6,7 @@
 /*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:16:20 by lecartuy          #+#    #+#             */
-/*   Updated: 2025/08/12 17:47:48 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/18 17:32:55 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,9 @@
 # define KEY_LEFT 65361
 # define KEY_RIGHT 65363
 # define KEY_ESC 65307
-# define SIZE 64
+# define SCREEN_WIDTH 1920
+# define SCREEN_HEIGHT 1080
+# define SIZE 16
 # define SPEED 0.08f
 # define ROT_ANGLE 0.06f
 
@@ -100,6 +102,22 @@ typedef struct s_keys
 	int	esc;
 }				t_keys;
 
+typedef struct s_rays
+{
+	int		map_x;
+	int		map_y;
+	int		step_x;
+	int		step_y;
+	double	cameraX;
+	double	raydirX;
+	double	raydirY;
+	double	deltadistX;
+	double	deltadistY;
+	double	sidedistX;
+	double	sidedistY;
+	double	perp_wall_dist;
+}			t_rays;
+
 typedef struct s_minilib
 {
 	void	*mlx;
@@ -117,15 +135,19 @@ typedef struct s_data
 	t_config	config;
 	t_map		map;
 	t_player	player;
-	t_minilib	*minilib;
+	t_rays		rays;
 	t_keys		*keys;
+	t_minilib	*minilib;
 	char		*file_content;
 }				t_data;
 
 //exec
+void ft_init_rays(t_data *data);
 int	ft_init_minilib(t_data *data);
 int ft_init_keys(t_data *data);
 int	game_on(t_data *data);
+
+void	ft_mlx_put_pixel(t_minilib *minilib, int x, int y, int color);
 
 void	going_forward(t_data *data, float speed);
 void	going_left(t_data *data, float speed);
@@ -134,6 +156,9 @@ void	going_right(t_data *data, float speed);
 
 void	look_left(t_data *data, float rot_angle);
 void	look_right(t_data *data, float rot_angle);
+void	draw_in_3d(t_data *data, int x, int side);
+float	ft_fabs(float num);
+void	cast_rays(t_data *data, t_player *player);
 
 // Init
 

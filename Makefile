@@ -1,4 +1,4 @@
-MAKEFLAGS += --no-print-directory
+ MAKEFLAGS += --no-print-directory
 
 # Compiler and flags
 CC      = gcc
@@ -27,6 +27,7 @@ SRC_FILES = \
 	init/init.c \
 	game/game_on.c \
 	game/movement.c \
+	game/dda.c \
 	exit.c \
 	main.c
 

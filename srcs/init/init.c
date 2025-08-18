@@ -6,7 +6,7 @@
 /*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:46:23 by lecartuy          #+#    #+#             */
-/*   Updated: 2025/08/12 17:54:12 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/18 15:24:28 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,17 @@ void init_data(t_data *data)
     data->player.plane_y = 0.0f;
     data->player.x = 0.0f;
     data->player.y = 0.0f;
+}
+
+void ft_init_rays(t_data *data)
+{
+    data->rays.cameraX = 0;
+    data->rays.deltadistX = 0;
+    data->rays.deltadistY = 0;
+    data->rays.map_x = 0;
+    data->rays.map_y = 0;
+    data->rays.raydirX = 0;
+    data->rays.raydirY = 0;
 }
 
 int ft_init_minilib(t_data *data)

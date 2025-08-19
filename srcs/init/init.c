@@ -6,7 +6,7 @@
 /*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:46:23 by lecartuy          #+#    #+#             */
-/*   Updated: 2025/08/18 15:24:28 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/19 19:10:22 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,44 @@ void init_data(t_data *data)
     data->player.plane_y = 0.0f;
     data->player.x = 0.0f;
     data->player.y = 0.0f;
+}
+
+void    ft_init_xpms(t_data *data)
+{
+    int i;
+
+    i = 0;
+    while (i < 4)
+    {
+        data->xpms[i].img = NULL;
+        data->xpms[i].addr = NULL;
+        data->xpms[i].bpp = 0;
+        data->xpms[i].line_length = 0;
+        data->xpms[i].endian = 0;
+        data->xpms[i].width = 0;
+        data->xpms[i].height = 0;
+        i++;
+    }
+}
+
+void    ft_load_textures(t_data *data)
+{
+    data->xpms[0].img = mlx_xpm_file_to_image(data->minilib->mlx, "textures/north.xpm", &data->xpms[0].width, &data->xpms[0].height);
+    if (!data->xpms[0].img)
+        exit(printf("Error\nFailed to load north.xpm\n"));
+    data->xpms[0].addr = mlx_get_data_addr(data->xpms[0].img, &data->xpms[0].bpp, &data->xpms[0].line_length, &data->xpms[0].endian);
+    data->xpms[1].img = mlx_xpm_file_to_image(data->minilib->mlx, "textures/east.xpm", &data->xpms[1].width, &data->xpms[1].height);
+    if (!data->xpms[1].img)
+        exit(printf("Error\nFailed to load east.xpm\n"));
+    data->xpms[1].addr = mlx_get_data_addr(data->xpms[1].img, &data->xpms[1].bpp, &data->xpms[1].line_length, &data->xpms[1].endian);
+    data->xpms[2].img = mlx_xpm_file_to_image(data->minilib->mlx, "textures/south.xpm", &data->xpms[2].width, &data->xpms[2].height);
+    if (!data->xpms[2].img)
+        exit(printf("Error\nFailed to load south.xpm\n"));
+    data->xpms[2].addr = mlx_get_data_addr(data->xpms[2].img, &data->xpms[2].bpp, &data->xpms[2].line_length, &data->xpms[2].endian);
+    data->xpms[3].img = mlx_xpm_file_to_image(data->minilib->mlx, "textures/west.xpm", &data->xpms[3].width, &data->xpms[3].height);
+    if (!data->xpms[3].img)
+        exit(printf("Error\nFailed to load west.xpm\n"));
+    data->xpms[3].addr = mlx_get_data_addr(data->xpms[3].img, &data->xpms[3].bpp, &data->xpms[3].line_length, &data->xpms[3].endian);
 }
 
 void ft_init_rays(t_data *data)

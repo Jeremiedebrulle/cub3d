@@ -6,7 +6,7 @@
 /*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 15:52:27 by jdebrull          #+#    #+#             */
-/*   Updated: 2025/08/18 17:15:25 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/19 17:38:28 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_mlx_start(t_data *data)
 		//free all
 		exit(1);
 	}
-	data->minilib->img = mlx_new_image(data->minilib->mlx, data->map.width * SIZE, data->map.height * SIZE);
+	data->minilib->img = mlx_new_image(data->minilib->mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
 	if (!data->minilib->img)
 	{
 		mlx_destroy_display(data->minilib->mlx);
@@ -67,7 +67,7 @@ void	fill_square(t_data *data, int x, int y, int color)
 		i = 0;
 		while (i < SIZE)
 		{
-			if (i == 0 || i == SIZE -1 || j == 0 || j == SIZE - 1)
+			if (i == 0 || i == SIZE -1 || j == 0 || j == SIZE - 1) // les lignes blanches sur la minimap
 				ft_mlx_put_pixel(data->minilib, x + i, y + j, 0xFFFFFFFF);
 			else
 				ft_mlx_put_pixel(data->minilib, x + i, y + j, color);
@@ -112,7 +112,7 @@ void	draw_player(t_data *data)
 	int	py;
 	int	size;
 
-	size = SIZE / 16;
+	size = SIZE / 8;
 	px = (int)(data->player.x * SIZE);
 	py = (int)(data->player.y * SIZE);
 	j = -size;
@@ -154,10 +154,10 @@ void	draw_dir(t_data *data)
 
 void	fill_win(t_data *data)
 {
-	draw_minimap(data);
-	draw_player(data);
-	draw_dir(data);
 	cast_rays(data, &data->player);
+	//draw_minimap(data);
+	//draw_player(data);
+	//draw_dir(data);
 	mlx_put_image_to_window(data->minilib->mlx, data->minilib->win, data->minilib->img, 0, 0);
 }
 
@@ -165,7 +165,7 @@ void	mlx_redraw(t_data *data)
 {
 	if (data->minilib->img)
 		mlx_destroy_image(data->minilib->mlx, data->minilib->img);
-	data->minilib->img = mlx_new_image(data->minilib->mlx, data->map.width * SIZE, data->map.height * SIZE);
+	data->minilib->img = mlx_new_image(data->minilib->mlx, SCREEN_WIDTH, SCREEN_HEIGHT);
 	data->minilib->addr = mlx_get_data_addr(data->minilib->img, &data->minilib->bpp, &data->minilib->line_length, &data->minilib->endian);
 	mlx_put_image_to_window(data->minilib->mlx, data->minilib->win, data->minilib->img, 0, 0);
 }
@@ -243,6 +243,8 @@ int	game_on(t_data *data)
 	if (!ft_init_minilib(data) || !ft_init_keys(data))
 		return (0);
 	ft_init_rays(data);
+	ft_init_xpms(data);
+	ft_load_textures(data);
 	ft_mlx_start(data);
 	mlx_controls(data);
 	//pixel_map(data);

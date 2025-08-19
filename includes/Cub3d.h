@@ -6,7 +6,7 @@
 /*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:16:20 by lecartuy          #+#    #+#             */
-/*   Updated: 2025/08/18 17:32:55 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/19 18:20:59 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # define SCREEN_HEIGHT 1080
 # define SIZE 16
 # define SPEED 0.08f
-# define ROT_ANGLE 0.06f
+# define ROT_ANGLE 0.08f
 
 // Error messages
 
@@ -93,14 +93,14 @@ typedef struct s_map
 
 typedef struct s_keys
 {
-	int w;
-	int	a;
-	int	s;
-	int	d;
-	int	l;
-	int	r;
-	int	esc;
-}				t_keys;
+	int		w;
+	int		a;
+	int		s;
+	int		d;
+	int		l;
+	int		r;
+	int		esc;
+}			t_keys;
 
 typedef struct s_rays
 {
@@ -127,8 +127,18 @@ typedef struct s_minilib
 	int		bpp;
 	int		line_length;
 	int		endian;
-	
-}				t_minilib;
+}			t_minilib;
+
+typedef struct s_xpms
+{
+	void	*img;
+	char	*addr;
+	int		bpp;
+	int		line_length;
+	int		endian;
+	int		width;
+	int		height;
+}			t_xpms;
 
 typedef struct s_data
 {
@@ -138,15 +148,18 @@ typedef struct s_data
 	t_rays		rays;
 	t_keys		*keys;
 	t_minilib	*minilib;
+	t_xpms		xpms[4];
 	char		*file_content;
 }				t_data;
 
 //exec
-void ft_init_rays(t_data *data);
-int	ft_init_minilib(t_data *data);
-int ft_init_keys(t_data *data);
-int	game_on(t_data *data);
+void	ft_init_xpms(t_data *data);
+void	ft_init_rays(t_data *data);
+int		ft_init_minilib(t_data *data);
+int		ft_init_keys(t_data *data);
+int		game_on(t_data *data);
 
+void    ft_load_textures(t_data *data);
 void	ft_mlx_put_pixel(t_minilib *minilib, int x, int y, int color);
 
 void	going_forward(t_data *data, float speed);
@@ -156,7 +169,7 @@ void	going_right(t_data *data, float speed);
 
 void	look_left(t_data *data, float rot_angle);
 void	look_right(t_data *data, float rot_angle);
-void	draw_in_3d(t_data *data, int x, int side);
+void	draw_in_3d(t_data *data, int x, int side, double perp);
 float	ft_fabs(float num);
 void	cast_rays(t_data *data, t_player *player);
 

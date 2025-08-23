@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Jdebrull <jdebrull@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:46:23 by lecartuy          #+#    #+#             */
-/*   Updated: 2025/08/19 19:10:22 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/23 15:38:54 by Jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,18 +57,26 @@ void    ft_load_textures(t_data *data)
     if (!data->xpms[0].img)
         exit(printf("Error\nFailed to load north.xpm\n"));
     data->xpms[0].addr = mlx_get_data_addr(data->xpms[0].img, &data->xpms[0].bpp, &data->xpms[0].line_length, &data->xpms[0].endian);
+    if (!data->xpms[0].addr)
+        exit(printf("Error\nFailed to get address for north.xpm\n"));
     data->xpms[1].img = mlx_xpm_file_to_image(data->minilib->mlx, "textures/east.xpm", &data->xpms[1].width, &data->xpms[1].height);
     if (!data->xpms[1].img)
         exit(printf("Error\nFailed to load east.xpm\n"));
     data->xpms[1].addr = mlx_get_data_addr(data->xpms[1].img, &data->xpms[1].bpp, &data->xpms[1].line_length, &data->xpms[1].endian);
+    if (!data->xpms[1].addr)
+        exit(printf("Error\nFailed to get address for east.xpm\n"));
     data->xpms[2].img = mlx_xpm_file_to_image(data->minilib->mlx, "textures/south.xpm", &data->xpms[2].width, &data->xpms[2].height);
     if (!data->xpms[2].img)
         exit(printf("Error\nFailed to load south.xpm\n"));
     data->xpms[2].addr = mlx_get_data_addr(data->xpms[2].img, &data->xpms[2].bpp, &data->xpms[2].line_length, &data->xpms[2].endian);
+    if (!data->xpms[2].addr)
+        exit(printf("Error\nFailed to get address for south.xpm\n"));
     data->xpms[3].img = mlx_xpm_file_to_image(data->minilib->mlx, "textures/west.xpm", &data->xpms[3].width, &data->xpms[3].height);
     if (!data->xpms[3].img)
         exit(printf("Error\nFailed to load west.xpm\n"));
     data->xpms[3].addr = mlx_get_data_addr(data->xpms[3].img, &data->xpms[3].bpp, &data->xpms[3].line_length, &data->xpms[3].endian);
+    if (!data->xpms[3].addr)
+        exit(printf("Error\nFailed to get address for west.xpm\n"));
 }
 
 void ft_init_rays(t_data *data)
@@ -87,12 +95,17 @@ int ft_init_minilib(t_data *data)
     data->minilib = malloc(sizeof(t_minilib));
     if (!data->minilib)
         return (printf("Error\nMemory allocation failed.\n"), 0);
+    data->minilib->mlx = mlx_init();
+	if (!data->minilib->mlx)
+	{
+		//free_all
+		exit(0);
+	}
     data->minilib->bpp = 0;
     data->minilib->endian = 0;
     data->minilib->line_length = 0;
     data->minilib->addr = NULL;
     data->minilib->img = NULL;
-    data->minilib->mlx = NULL;
     data->minilib->win = NULL;
     return (1);
 }

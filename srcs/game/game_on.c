@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   game_on.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Jdebrull <jdebrull@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 15:52:27 by jdebrull          #+#    #+#             */
-/*   Updated: 2025/08/19 17:38:28 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/23 18:35:43 by Jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Cub3d.h"
+#include "../../includes/Cub3d.h"
 
 void	ft_mlx_put_pixel(t_minilib *minilib, int x, int y, int color)
 {
@@ -24,12 +24,6 @@ void	ft_mlx_put_pixel(t_minilib *minilib, int x, int y, int color)
 
 void	ft_mlx_start(t_data *data)
 {
-	data->minilib->mlx = mlx_init();
-	if (!data->minilib->mlx)
-	{
-		//free_all
-		exit(0);
-	}
 	data->minilib->win = mlx_new_window(data->minilib->mlx, SCREEN_WIDTH, SCREEN_HEIGHT, "cub3D");
 	if (!data->minilib->win)
 	{
@@ -152,14 +146,14 @@ void	draw_dir(t_data *data)
 	}
 }
 
-void	fill_win(t_data *data)
+/* void	fill_win(t_data *data)
 {
 	cast_rays(data, &data->player);
 	//draw_minimap(data);
 	//draw_player(data);
 	//draw_dir(data);
 	mlx_put_image_to_window(data->minilib->mlx, data->minilib->win, data->minilib->img, 0, 0);
-}
+} */
 
 void	mlx_redraw(t_data *data)
 {
@@ -224,7 +218,10 @@ int update(t_data *data)
 		going_backward(data, SPEED);
 	if (data->keys->d)
 		going_right(data, SPEED);
-	fill_win(data);  // redraw minimap + player
+	mlx_redraw(data);
+	cast_rays(data, &data->player);
+	mlx_put_image_to_window(data->minilib->mlx, data->minilib->win, data->minilib->img, 0, 0);
+	//fill_win(data);  // redraw minimap + player
 	usleep(10000);
 	return (0);
 }
@@ -240,11 +237,20 @@ void	mlx_controls(t_data *data)
 
 int	game_on(t_data *data)
 {
+	int	i;
+
+	i = 0;
 	if (!ft_init_minilib(data) || !ft_init_keys(data))
 		return (0);
 	ft_init_rays(data);
 	ft_init_xpms(data);
 	ft_load_textures(data);
+	while (i < 4)
+	{
+		if (!data->xpms[i].img)
+			return (0);
+		i++;
+	}
 	ft_mlx_start(data);
 	mlx_controls(data);
 	//pixel_map(data);

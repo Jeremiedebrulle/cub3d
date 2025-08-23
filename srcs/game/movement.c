@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   movement.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Jdebrull <jdebrull@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:01:15 by jdebrull          #+#    #+#             */
-/*   Updated: 2025/08/18 14:57:08 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/23 14:53:41 by Jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Cub3d.h"
+#include "../../includes/Cub3d.h"
 
 void	going_forward(t_data *data, float speed)
 {

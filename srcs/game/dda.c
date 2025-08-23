@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   dda.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Jdebrull <jdebrull@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 14:52:52 by jdebrull          #+#    #+#             */
-/*   Updated: 2025/08/19 19:17:54 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/23 19:02:59 by Jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Cub3d.h"
+#include "../../includes/Cub3d.h"
 
 double	ft_dabs(double num)
 {
@@ -97,13 +97,13 @@ void	step_dist(t_player *player, t_rays *rays)
 
 void	set_pixel(t_minilib *mlx, int x, int y, int color)
 {
-	int *pixel;
+	char	*src;
 
-	pixel = (int *)(mlx->addr + y * mlx->line_length + x * 4);
-	*pixel = color;
+	src = mlx->addr + y * mlx->line_length + x * (mlx->bpp / 8);
+	*(unsigned int *)src = color;
 }
 
-/* void	draw_vertical_line(t_data *data, int x, int	start, int end, t_xpms *xpm)
+/* void	draw_vertical_line(t_data *data, int x, int	start, int end)
 {
 	int	*pixel;
 	int	y;
@@ -134,24 +134,32 @@ void	draw_vertical_line_xpm(t_data *data, int x, int start, int end, t_xpms *xpm
 {
 	int		y;
 	int		xpm_y;
-	char	*pixel;
+	//char	*pixel;
+	unsigned char	*src;
 	int		color;
+	int		bytes_per_pixel;
 	double	step;
 	double	xpm_pos;
+
+	
 	
 	xpm_pos = 0.0;
-	if ((end - start) != 0)	
-		step = 1.0 * xpm->height / (end - start);
+	color = 0;
+	if ((end != start))	
+		step = (double)xpm->height / (end - start);
 	else
-		step = 0.0;
+		step = (double)xpm->height;
 	y = start;
 	while (y <= end)
 	{
 		xpm_y = (int)xpm_pos;
 		if (xpm_y >= xpm->height)
 			xpm_y = xpm->height - 1;
-		pixel = xpm->addr + (xpm_y * xpm->line_length + xpm_x * (xpm->bpp / 8));
-		color = *(int *)pixel;
+		bytes_per_pixel = xpm->bpp / 8;
+		//pixel = xpm->addr + (xpm_y * xpm->line_length + xpm_x * (xpm->bpp / 8));
+		//color = *(int *)pixel;
+		src = (unsigned char *)xpm->addr + (xpm_y * xpm->line_length + xpm_x * bytes_per_pixel);
+		ft_memcpy(&color, src, bytes_per_pixel);
 		set_pixel(data->minilib, x, y, color);
 		xpm_pos += step;
 		y++;
@@ -170,21 +178,21 @@ int	get_xpm(t_data *data, t_xpms *xpm, double wall_x, int side)
 	return (xpm_x);
 }
 
-int	xpm_prep(t_data *data, t_xpms *xpm, int side, double perp_wall_dist)
+int	xpm_prep(t_data *data, t_xpms *xpm, int side, double perp_wall_dist, t_rays *rays)
 {
 	double	wall_x;
 	int		xpm_x;
 
 	if (side == 0)
-		wall_x = data->player.y + perp_wall_dist * data->rays.raydirY;
+		wall_x = data->player.y + perp_wall_dist * rays->raydirY;
 	else
-		wall_x = data->player.x + perp_wall_dist * data->rays.raydirX;
+		wall_x = data->player.x + perp_wall_dist * rays->raydirX;
 	wall_x -= ft_floor(wall_x); // fct de math.h qui permet d'avoir le chiffre derriere la virgule donc ce qu'il nous reste a la fin c'est la co correct du mur
 	xpm_x = get_xpm(data, xpm, wall_x, side);
 	return (xpm_x);
 }
 
-void	draw_in_3d(t_data *data, int x, int side, double perp_wall_dist)
+void	draw_in_3d(t_data *data, int x, int side, double perp_wall_dist, t_rays *rays)
 {
 	t_xpms	*xpm;
 	int		xpm_x;
@@ -192,23 +200,36 @@ void	draw_in_3d(t_data *data, int x, int side, double perp_wall_dist)
 	int		start_point;
 	int		end_point;
 
-	line_height = (int)(SCREEN_HEIGHT / perp_wall_dist);
+	
+	/*if (perp_wall_dist < 0.1f)
+		perp_wall_dist = 1;*/
+	if (perp_wall_dist <= 1)
+		line_height = SCREEN_HEIGHT;
+	else
+		line_height = (int)(SCREEN_HEIGHT / perp_wall_dist);
 	start_point = -line_height / 2 + SCREEN_HEIGHT / 2;
-	end_point = line_height / 2 + SCREEN_HEIGHT / 2;
 	if (start_point < 0)
 		start_point = 0;
+	end_point = line_height / 2 + SCREEN_HEIGHT / 2;
 	if (end_point >= SCREEN_HEIGHT)
 		end_point = SCREEN_HEIGHT - 1;
-	if (side == 0 && data->rays.raydirX > 0)
+	if (side == 0 && rays->raydirX > 0)
 		xpm = &data->xpms[1];
-	else if (side == 0 && data->rays.raydirX < 0)
+	else if (side == 0 && rays->raydirX < 0)
 		xpm = &data->xpms[3];
-	else if (side == 1 && data->rays.raydirY > 0)
+	else if (side == 1 && rays->raydirY > 0)
 		xpm = &data->xpms[2];
-	else if (side == 1 && data->rays.raydirY < 0)
+	else if (side == 1 && rays->raydirY < 0)
 		xpm = &data->xpms[0];
-	xpm_x = xpm_prep(data, xpm, side, perp_wall_dist);
+	else
+		return ;
+	xpm_x = xpm_prep(data, xpm, side, perp_wall_dist, rays);
+	if (xpm_x < 0)
+		xpm_x = 0;
+	else if (xpm_x >= xpm->width)
+		xpm_x = xpm->width - 1;
 	draw_vertical_line_xpm(data, x, start_point, end_point, xpm, xpm_x);
+	//draw_vertical_line(data, x, start_point, end_point);
 }
 
 void	wall_dist(t_data *data, t_rays *rays, int side, int x)
@@ -222,7 +243,7 @@ void	wall_dist(t_data *data, t_rays *rays, int side, int x)
 	if (perp_wall_dist <= 0)
 		perp_wall_dist = 0.0001;
 	//draw_pov(data, rays);
-	draw_in_3d(data, x, side, perp_wall_dist);
+	draw_in_3d(data, x, side, perp_wall_dist, rays);
 }
 
 void	dda_loop(t_data *data, t_rays *rays, int x)

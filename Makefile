@@ -2,7 +2,7 @@
 
 # Compiler and flags
 CC      = gcc
-CFLAGS  = -Wall -Wextra -Werror
+CFLAGS  = -g -Wall -Wextra -Werror
 MLXFLAGS = -Imlx_linux -lXext -lX11 -lm -lz
 
 # Project name

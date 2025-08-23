@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Jdebrull <jdebrull@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:16:20 by lecartuy          #+#    #+#             */
-/*   Updated: 2025/08/19 18:20:59 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/23 18:50:46 by Jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # define SIZE 16
 # define SPEED 0.08f
 # define ROT_ANGLE 0.08f
+# define FOV 1.1519f
 
 // Error messages
 
@@ -161,6 +162,7 @@ int		game_on(t_data *data);
 
 void    ft_load_textures(t_data *data);
 void	ft_mlx_put_pixel(t_minilib *minilib, int x, int y, int color);
+void	set_pixel(t_minilib *mlx, int x, int y, int color);
 
 void	going_forward(t_data *data, float speed);
 void	going_left(t_data *data, float speed);
@@ -169,7 +171,7 @@ void	going_right(t_data *data, float speed);
 
 void	look_left(t_data *data, float rot_angle);
 void	look_right(t_data *data, float rot_angle);
-void	draw_in_3d(t_data *data, int x, int side, double perp);
+void	draw_in_3d(t_data *data, int x, int side, double perp_wall_dist, t_rays *rays);
 float	ft_fabs(float num);
 void	cast_rays(t_data *data, t_player *player);
 

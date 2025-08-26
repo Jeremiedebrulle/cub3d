@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Jdebrull <jdebrull@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:16:20 by lecartuy          #+#    #+#             */
-/*   Updated: 2025/08/23 18:50:46 by Jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/26 14:02:43 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,10 @@
 # define SCREEN_WIDTH 1920
 # define SCREEN_HEIGHT 1080
 # define SIZE 16
-# define SPEED 0.08f
-# define ROT_ANGLE 0.08f
+# define SPEED 0.2f
+# define ROT_ANGLE 0.12f
 # define FOV 1.1519f
+# define PLAYER_RADIUS 0.2f
 
 // Error messages
 
@@ -164,10 +165,10 @@ void    ft_load_textures(t_data *data);
 void	ft_mlx_put_pixel(t_minilib *minilib, int x, int y, int color);
 void	set_pixel(t_minilib *mlx, int x, int y, int color);
 
-void	going_forward(t_data *data, float speed);
-void	going_left(t_data *data, float speed);
-void	going_backward(t_data *data, float speed);
-void	going_right(t_data *data, float speed);
+void	going_forward(t_data *data, float rad);
+void	going_left(t_data *data, float rad);
+void	going_backward(t_data *data, float rad);
+void	going_right(t_data *data, float rad);
 
 void	look_left(t_data *data, float rot_angle);
 void	look_right(t_data *data, float rot_angle);
@@ -177,7 +178,7 @@ void	cast_rays(t_data *data, t_player *player);
 
 // Init
 
-void			init_data(t_data *data);
+void	init_data(t_data *data);
 
 // Args_Parsing
 

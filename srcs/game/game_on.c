@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game_on.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Jdebrull <jdebrull@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 15:52:27 by jdebrull          #+#    #+#             */
-/*   Updated: 2025/08/23 18:35:43 by Jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/26 13:46:12 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,15 +211,17 @@ int update(t_data *data)
 	if (data->keys->l)
 		look_left(data, ROT_ANGLE);
 	if (data->keys->w)
-		going_forward(data, SPEED);
+		going_forward(data, PLAYER_RADIUS);
 	if (data->keys->a)
-		going_left(data, SPEED);
+		going_left(data, PLAYER_RADIUS);
 	if (data->keys->s)
-		going_backward(data, SPEED);
+		going_backward(data, PLAYER_RADIUS);
 	if (data->keys->d)
-		going_right(data, SPEED);
+		going_right(data, PLAYER_RADIUS);
 	mlx_redraw(data);
 	cast_rays(data, &data->player);
+	//draw_minimap(data);
+	//draw_player(data);
 	mlx_put_image_to_window(data->minilib->mlx, data->minilib->win, data->minilib->img, 0, 0);
 	//fill_win(data);  // redraw minimap + player
 	usleep(10000);

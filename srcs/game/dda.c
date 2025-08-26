@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dda.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Jdebrull <jdebrull@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 14:52:52 by jdebrull          #+#    #+#             */
-/*   Updated: 2025/08/23 19:02:59 by Jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/26 12:59:35 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ void	set_pixel(t_minilib *mlx, int x, int y, int color)
 	}
 } */
 
-void	draw_vertical_line_xpm(t_data *data, int x, int start, int end, t_xpms *xpm, int xpm_x)
+void	draw_vertical_line_xpm(t_data *data, int x, int start, int end, t_xpms *xpm, int xpm_x, double tex_pos, double step)
 {
 	int		y;
 	int		xpm_y;
@@ -138,21 +138,21 @@ void	draw_vertical_line_xpm(t_data *data, int x, int start, int end, t_xpms *xpm
 	unsigned char	*src;
 	int		color;
 	int		bytes_per_pixel;
-	double	step;
-	double	xpm_pos;
+	//double	step;
+	//double	xpm_pos;
 
 	
 	
-	xpm_pos = 0.0;
+	//xpm_pos = 0.0;
 	color = 0;
-	if ((end != start))	
+/* 	if ((end != start))	
 		step = (double)xpm->height / (end - start);
 	else
-		step = (double)xpm->height;
+		step = (double)xpm->height; */
 	y = start;
 	while (y <= end)
 	{
-		xpm_y = (int)xpm_pos;
+		xpm_y = (int)tex_pos;
 		if (xpm_y >= xpm->height)
 			xpm_y = xpm->height - 1;
 		bytes_per_pixel = xpm->bpp / 8;
@@ -161,7 +161,7 @@ void	draw_vertical_line_xpm(t_data *data, int x, int start, int end, t_xpms *xpm
 		src = (unsigned char *)xpm->addr + (xpm_y * xpm->line_length + xpm_x * bytes_per_pixel);
 		ft_memcpy(&color, src, bytes_per_pixel);
 		set_pixel(data->minilib, x, y, color);
-		xpm_pos += step;
+		tex_pos += step;
 		y++;
 	}
 }
@@ -199,20 +199,20 @@ void	draw_in_3d(t_data *data, int x, int side, double perp_wall_dist, t_rays *ra
 	int		line_height;
 	int		start_point;
 	int		end_point;
+	double	step;
+	double	tex_pos;
 
 	
 	/*if (perp_wall_dist < 0.1f)
 		perp_wall_dist = 1;*/
-	if (perp_wall_dist <= 1)
-		line_height = SCREEN_HEIGHT;
-	else
-		line_height = (int)(SCREEN_HEIGHT / perp_wall_dist);
+	line_height = (int)(SCREEN_HEIGHT / perp_wall_dist);
 	start_point = -line_height / 2 + SCREEN_HEIGHT / 2;
 	if (start_point < 0)
 		start_point = 0;
 	end_point = line_height / 2 + SCREEN_HEIGHT / 2;
 	if (end_point >= SCREEN_HEIGHT)
 		end_point = SCREEN_HEIGHT - 1;
+	
 	if (side == 0 && rays->raydirX > 0)
 		xpm = &data->xpms[1];
 	else if (side == 0 && rays->raydirX < 0)
@@ -228,7 +228,9 @@ void	draw_in_3d(t_data *data, int x, int side, double perp_wall_dist, t_rays *ra
 		xpm_x = 0;
 	else if (xpm_x >= xpm->width)
 		xpm_x = xpm->width - 1;
-	draw_vertical_line_xpm(data, x, start_point, end_point, xpm, xpm_x);
+	step = (double)xpm->height / line_height;
+	tex_pos = (start_point - (-line_height / 2 + SCREEN_HEIGHT / 2)) * step;
+	draw_vertical_line_xpm(data, x, start_point, end_point, xpm, xpm_x, tex_pos, step);
 	//draw_vertical_line(data, x, start_point, end_point);
 }
 

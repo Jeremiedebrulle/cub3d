@@ -3,88 +3,88 @@
 /*                                                        :::      ::::::::   */
 /*   movement.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Jdebrull <jdebrull@student.s19.be>         +#+  +:+       +#+        */
+/*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 19:01:15 by jdebrull          #+#    #+#             */
-/*   Updated: 2025/08/23 14:53:41 by Jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/26 13:59:03 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/Cub3d.h"
 
-void	going_forward(t_data *data, float speed)
+void going_forward(t_data *data, float rad)
 {
-	int		map_x;
-	int		map_y;
 	float	new_x;
 	float	new_y;
 
-	new_x = data->player.x + data->player.dir_x * speed;
-	new_y = data->player.y + data->player.dir_y * speed;
-	map_x = (int)new_x;
-	map_y = (int)data->player.y;
-	if (data->map.lines[map_y][map_x] != '1')
+	new_x = data->player.x + data->player.dir_x * SPEED;
+	new_y = data->player.y + data->player.dir_y * SPEED;
+	if (data->map.lines[(int)(data->player.y + rad)][(int)(new_x + rad)] != '1' &&
+	data->map.lines[(int)(data->player.y + rad)][(int)(new_x - rad)] != '1' &&
+	data->map.lines[(int)(data->player.y - rad)][(int)(new_x - rad)] != '1' &&
+	data->map.lines[(int)(data->player.y - rad)][(int)(new_x + rad)] != '1')
 		data->player.x = new_x;
-	map_x = (int)data->player.x;
-	map_y = (int)new_y;
-	if (data->map.lines[map_y][map_x] != '1')
+	if (data->map.lines[(int)(new_y + rad)][(int)(data->player.x + rad)] != '1' &&
+	data->map.lines[(int)(new_y + rad)][(int)(data->player.x - rad)] != '1' &&
+	data->map.lines[(int)(new_y - rad)][(int)(data->player.x + rad)] != '1' &&
+	data->map.lines[(int)(new_y - rad)][(int)(data->player.x - rad)] != '1')
 		data->player.y = new_y;
 }
 
-void	going_left(t_data *data, float speed)
+void going_left(t_data *data, float rad)
 {
-	int		map_x;
-	int		map_y;
 	float	new_x;
 	float	new_y;
 
-	new_x = data->player.x - data->player.plane_x * speed;
-	new_y = data->player.y - data->player.plane_y * speed;
-	map_x = (int)new_x;
-	map_y = (int)data->player.y;
-	if (data->map.lines[map_y][map_x] != '1')
+	new_x = data->player.x - data->player.plane_x * SPEED;
+	new_y = data->player.y - data->player.plane_y * SPEED;
+	if (data->map.lines[(int)(data->player.y + rad)][(int)(new_x + rad)] != '1' &&
+	data->map.lines[(int)(data->player.y + rad)][(int)(new_x - rad)] != '1' &&
+	data->map.lines[(int)(data->player.y - rad)][(int)(new_x + rad)] != '1' &&
+	data->map.lines[(int)(data->player.y - rad)][(int)(new_x - rad)] != '1')
 		data->player.x = new_x;
-	map_x = (int)data->player.x;
-	map_y = (int)new_y;
-	if (data->map.lines[map_y][map_x] != '1')
+	if (data->map.lines[(int)(new_y + rad)][(int)(data->player.x + rad)] != '1' &&
+	data->map.lines[(int)(new_y + rad)][(int)(data->player.x - rad)] != '1' &&
+	data->map.lines[(int)(new_y - rad)][(int)(data->player.x + rad)] != '1' &&
+	data->map.lines[(int)(new_y - rad)][(int)(data->player.x - rad)] != '1')
 		data->player.y = new_y;
 }
 
-void	going_backward(t_data *data, float speed)
+void going_backward(t_data *data, float rad)
 {
-	int		map_x;
-	int		map_y;
 	float	new_x;
 	float	new_y;
 
-	new_x = data->player.x - data->player.dir_x * speed;
-	new_y = data->player.y - data->player.dir_y * speed;
-	map_x = (int)new_x;
-	map_y = (int)data->player.y;
-	if (data->map.lines[map_y][map_x] != '1')
+	new_x = data->player.x - data->player.dir_x * SPEED;
+	new_y = data->player.y - data->player.dir_y * SPEED;
+	if (data->map.lines[(int)(data->player.y + rad)][(int)(new_x + rad)] != '1' &&
+	data->map.lines[(int)(data->player.y + rad)][(int)(new_x - rad)] != '1' &&
+	data->map.lines[(int)(data->player.y - rad)][(int)(new_x - rad)] != '1' &&
+	data->map.lines[(int)(data->player.y - rad)][(int)(new_x + rad)] != '1')
 		data->player.x = new_x;
-	map_x = (int)data->player.x;
-	map_y = (int)new_y;
-	if (data->map.lines[map_y][map_x] != '1')
+	if (data->map.lines[(int)(new_y + rad)][(int)(data->player.x + rad)] != '1' &&
+	data->map.lines[(int)(new_y + rad)][(int)(data->player.x - rad)] != '1' &&
+	data->map.lines[(int)(new_y - rad)][(int)(data->player.x + rad)] != '1' &&
+	data->map.lines[(int)(new_y - rad)][(int)(data->player.x - rad)] != '1')
 		data->player.y = new_y;
 }
 
-void	going_right(t_data *data, float speed)
+void going_right(t_data *data, float rad)
 {
-	int		map_x;
-	int		map_y;
 	float	new_x;
 	float	new_y;
 
-	new_x = data->player.x + data->player.plane_x * speed;
-	new_y = data->player.y + data->player.plane_y * speed;
-	map_x = (int)new_x;
-	map_y = (int)data->player.y;
-	if (data->map.lines[map_y][map_x] != '1')
+	new_x = data->player.x + data->player.plane_x * SPEED;
+	new_y = data->player.y + data->player.plane_y * SPEED;
+	if (data->map.lines[(int)(data->player.y + rad)][(int)(new_x + rad)] != '1' &&
+	data->map.lines[(int)(data->player.y + rad)][(int)(new_x - rad)] != '1' &&
+	data->map.lines[(int)(data->player.y - rad)][(int)(new_x + rad)] != '1' &&
+	data->map.lines[(int)(data->player.y - rad)][(int)(new_x - rad)] != '1')
 		data->player.x = new_x;
-	map_x = (int)data->player.x;
-	map_y = (int)new_y;
-	if (data->map.lines[map_y][map_x] != '1')
+	if (data->map.lines[(int)(new_y + rad)][(int)(data->player.x + rad)] != '1' &&
+	data->map.lines[(int)(new_y + rad)][(int)(data->player.x - rad)] != '1' &&
+	data->map.lines[(int)(new_y - rad)][(int)(data->player.x + rad)] != '1' &&
+	data->map.lines[(int)(new_y - rad)][(int)(data->player.x - rad)] != '1')
 		data->player.y = new_y;
 }
 

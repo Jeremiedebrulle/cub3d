@@ -6,7 +6,7 @@
 /*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 14:52:52 by jdebrull          #+#    #+#             */
-/*   Updated: 2025/08/26 12:59:35 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/26 14:56:34 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,36 +132,31 @@ void	set_pixel(t_minilib *mlx, int x, int y, int color)
 
 void	draw_vertical_line_xpm(t_data *data, int x, int start, int end, t_xpms *xpm, int xpm_x, double tex_pos, double step)
 {
-	int		y;
-	int		xpm_y;
-	//char	*pixel;
+	int				y;
+	int				xpm_y;
 	unsigned char	*src;
-	int		color;
-	int		bytes_per_pixel;
-	//double	step;
-	//double	xpm_pos;
+	int				color;
+	int				bytes_per_pixel;
 
-	
-	
-	//xpm_pos = 0.0;
 	color = 0;
-/* 	if ((end != start))	
-		step = (double)xpm->height / (end - start);
-	else
-		step = (double)xpm->height; */
-	y = start;
-	while (y <= end)
+	y = 0;
+	while (y <= SCREEN_HEIGHT)
 	{
-		xpm_y = (int)tex_pos;
-		if (xpm_y >= xpm->height)
-			xpm_y = xpm->height - 1;
-		bytes_per_pixel = xpm->bpp / 8;
-		//pixel = xpm->addr + (xpm_y * xpm->line_length + xpm_x * (xpm->bpp / 8));
-		//color = *(int *)pixel;
-		src = (unsigned char *)xpm->addr + (xpm_y * xpm->line_length + xpm_x * bytes_per_pixel);
-		ft_memcpy(&color, src, bytes_per_pixel);
+		if (y < start)
+			color = data->config.ceiling_color;
+		else if (y > end)
+			color = data->config.floor_color;
+		else
+		{
+			xpm_y = (int)tex_pos;
+			if (xpm_y >= xpm->height)
+				xpm_y = xpm->height - 1;
+			bytes_per_pixel = xpm->bpp / 8;
+			src = (unsigned char *)xpm->addr + (xpm_y * xpm->line_length + xpm_x * bytes_per_pixel);
+			ft_memcpy(&color, src, bytes_per_pixel);
+			tex_pos += step;
+		}
 		set_pixel(data->minilib, x, y, color);
-		tex_pos += step;
 		y++;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:16:20 by lecartuy          #+#    #+#             */
-/*   Updated: 2025/08/26 14:02:43 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/26 16:20:35 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,12 @@
 # define KEY_ESC 65307
 # define SCREEN_WIDTH 1920
 # define SCREEN_HEIGHT 1080
-# define SIZE 16
+# define SIZE 8
 # define SPEED 0.2f
-# define ROT_ANGLE 0.12f
+# define ROT_ANGLE 0.2f
 # define FOV 1.1519f
 # define PLAYER_RADIUS 0.2f
+# define MAP_RADIUS 1.0f
 
 // Error messages
 

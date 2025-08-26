@@ -6,7 +6,7 @@
 /*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 15:52:27 by jdebrull          #+#    #+#             */
-/*   Updated: 2025/08/26 13:46:12 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/26 16:21:09 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	fill_square(t_data *data, int x, int y, int color)
 		j++;
 	}
 }
-
+/* 
 void	draw_minimap(t_data *data)
 {
 	int	x;
@@ -96,7 +96,23 @@ void	draw_minimap(t_data *data)
 		}
 		y++;
 	}
-}
+} */
+
+/* void	draw_cirle(t_minilib *minilib, float cx, float cy)
+{
+	int	x;
+	int	y;
+
+	y = (int)(cy - radius);
+	while (y = )
+} */
+
+/* void	draw_minimap(t_data *data)
+{
+	
+	fill_square(data, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 8, 0x00FF0000);
+	draw_circle(data->minilib, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 8);
+} */
 
 void	draw_player(t_data *data)
 {

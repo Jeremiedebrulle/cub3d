@@ -2,8 +2,8 @@ NO ./assets/textures/walls/stone_bricks/3.xpm
 SO ,.assets/textures/walls/stone_bricks/2.xpm
 WE ./assets/textures/walls/stone_bricks/4.xpm
 EA ./assets/textures/walls/stone_bricks/1.xpm
-F 220,100,0
-C 225,30,0
+F 34,139,34
+C 135,206,235
 
                          111111111
                         10000000001

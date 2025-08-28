@@ -6,7 +6,7 @@
 /*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 15:52:27 by jdebrull          #+#    #+#             */
-/*   Updated: 2025/08/28 16:15:59 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/28 16:44:48 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,18 @@ void	fill_square(t_data *data, int x, int y)
 {
 	int	i;
 	int	j;
+	int	player_size;
+	int	half;
 
-	j = 0;
-	while (j < SIZE / 2)
+	player_size = MAP_RADIUS / 20;
+	half = player_size / 2;
+	j = -half;
+	while (j < half)
 	{
-		i = 0;
-		while (i < SIZE / 2)
+		i = -half;
+		while (i < half)
 		{
-			ft_mlx_put_pixel(data->minilib, x - (SIZE / 4) + i, y - (SIZE / 4) + j, 0x00FF0000);
+			ft_mlx_put_pixel(data->minilib, x + i, y + j, 0x00FF0000);
 			i++;
 		}
 		j++;
@@ -219,6 +223,7 @@ void	mlx_redraw(t_data *data)
 	data->minilib->addr = mlx_get_data_addr(data->minilib->img, &data->minilib->bpp, &data->minilib->line_length, &data->minilib->endian);
 	mlx_put_image_to_window(data->minilib->mlx, data->minilib->win, data->minilib->img, 0, 0);
 }
+
 
 int key_press(int keycode, t_data *data)
 {

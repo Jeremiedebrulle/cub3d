@@ -6,7 +6,7 @@
 /*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:16:20 by lecartuy          #+#    #+#             */
-/*   Updated: 2025/08/28 15:55:14 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/28 16:39:32 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@
 # include "../mlx_linux/mlx.h"
 # include <fcntl.h>
 # include <math.h>
+# include <sys/time.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>

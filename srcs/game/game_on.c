@@ -6,7 +6,7 @@
 /*   By: jdebrull <jdebrull@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 15:52:27 by jdebrull          #+#    #+#             */
-/*   Updated: 2025/08/26 16:21:09 by jdebrull         ###   ########.fr       */
+/*   Updated: 2025/08/28 16:15:59 by jdebrull         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,69 +50,109 @@ int	destroy_window(void)
 	exit (1);
 }
 
-void	fill_square(t_data *data, int x, int y, int color)
+void	fill_square(t_data *data, int x, int y)
 {
 	int	i;
 	int	j;
 
 	j = 0;
-	while (j < SIZE)
+	while (j < SIZE / 2)
 	{
 		i = 0;
-		while (i < SIZE)
+		while (i < SIZE / 2)
 		{
-			if (i == 0 || i == SIZE -1 || j == 0 || j == SIZE - 1) // les lignes blanches sur la minimap
-				ft_mlx_put_pixel(data->minilib, x + i, y + j, 0xFFFFFFFF);
-			else
-				ft_mlx_put_pixel(data->minilib, x + i, y + j, color);
+			ft_mlx_put_pixel(data->minilib, x - (SIZE / 4) + i, y - (SIZE / 4) + j, 0x00FF0000);
 			i++;
 		}
 		j++;
 	}
 }
-/* 
-void	draw_minimap(t_data *data)
-{
-	int	x;
-	int	y;
-	int	color;
 
-	y = 0;
-	while (data->map.lines[y])
+int	is_inside(float cx, float cy, int x, int y)
+{
+	float	dist;
+	float	r2;
+
+	dist = (cx - x)*(cx - x) + (cy - y)*(cy - y);
+	r2 = MAP_RADIUS * MAP_RADIUS;
+	if (dist >= (r2 - (4 * MAP_RADIUS)) && dist <= (r2 + MAP_RADIUS))
+		return (1);
+	return (0);
+}
+
+void	draw_circle(t_minilib *minilib)
+{
+	int		x;
+	int		y;
+	float	cx;
+	float	cy;
+
+	cx = SCREEN_WIDTH / (POS_MAP * 2);
+	cy = SCREEN_HEIGHT / POS_MAP; 
+ 	if ((cx - MAP_RADIUS) < 0 || (cy - MAP_RADIUS) < 0)
+		exit(printf("Map radius is to big or position is not right.\n"));
+	y = (int)(cy - MAP_RADIUS);
+	while (y <= (int)(cy + MAP_RADIUS))
 	{
-		x = 0;
-		while (data->map.lines[y][x])
+		x = (int)(cx - MAP_RADIUS);
+		while (x <= (int)(cx + MAP_RADIUS))
 		{
-			if (data->map.lines[y][x] == '0' || data->map.lines[y][x] == 'N'
-				|| data->map.lines[y][x] == 'E' || data->map.lines[y][x] == 'S'
-				|| data->map.lines[y][x] == 'W')
-				color = 0x0000FF00; // green
-			else if (data->map.lines[y][x] == '1')
-				color = 0x000000FF; // blue
-			else
-				color = 0x00000000; // black
-			fill_square(data, x * SIZE, y * SIZE, color);
+			if (is_inside(cx, cy, x, y))
+				ft_mlx_put_pixel(minilib, x, y, 0x00000000);
 			x++;
 		}
 		y++;
 	}
-} */
+}
 
-/* void	draw_cirle(t_minilib *minilib, float cx, float cy)
+void	draw_minimap_inside(t_data *data)
 {
-	int	x;
-	int	y;
+	int	map_x;
+	int	map_y;
+	int	px;
+	int	py;
+	int	screen_x;
+	int	screen_y;
+	int	world_x;
+	int	world_y; 
 
-	y = (int)(cy - radius);
-	while (y = )
-} */
+	px = SCREEN_WIDTH / (POS_MAP * 2);
+	py = SCREEN_HEIGHT / POS_MAP;
+	map_y = -MAP_RADIUS;
+	while (map_y <= MAP_RADIUS)
+	{
+		map_x = -MAP_RADIUS;
+		while (map_x <= MAP_RADIUS)
+		{
+			screen_x = px + map_x;
+			screen_y = py + map_y;
+			if ((map_x * map_x + map_y * map_y) <= MAP_RADIUS * MAP_RADIUS)
+			{
+				world_x = (int)floorf(data->player.x + (float)map_x / (float)SIZE);
+				world_y = (int)floorf(data->player.y + (float)map_y / (float)SIZE);
+				ft_mlx_put_pixel(data->minilib, screen_x, screen_y, 0x00000000);
+				if (world_y >= 0 && world_y < data->map.height && world_x >= 0 && world_x < data->map.width)
+				{
+					if (data->map.lines[world_y][world_x] == '1')
+						ft_mlx_put_pixel(data->minilib, screen_x, screen_y, 0xFFFFFFFF);
+					else if (data->map.lines[world_y][world_x] == '0' || data->map.lines[world_y][world_x] == 'N'
+						|| data->map.lines[world_y][world_x] == 'E' || data->map.lines[world_y][world_x] == 'S'
+						|| data->map.lines[world_y][world_x] == 'W')
+							ft_mlx_put_pixel(data->minilib, screen_x, screen_y, 0x77777777);
+				}
+			}
+			map_x++;
+		}
+		map_y++;
+	}
+	fill_square(data, px, py);
+}
 
-/* void	draw_minimap(t_data *data)
+void	draw_minimap(t_data *data)
 {
-	
-	fill_square(data, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 8, 0x00FF0000);
-	draw_circle(data->minilib, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 8);
-} */
+	draw_minimap_inside(data);
+	draw_circle(data->minilib);
+}
 
 void	draw_player(t_data *data)
 {
@@ -236,7 +276,7 @@ int update(t_data *data)
 		going_right(data, PLAYER_RADIUS);
 	mlx_redraw(data);
 	cast_rays(data, &data->player);
-	//draw_minimap(data);
+	draw_minimap(data);
 	//draw_player(data);
 	mlx_put_image_to_window(data->minilib->mlx, data->minilib->win, data->minilib->img, 0, 0);
 	//fill_win(data);  // redraw minimap + player
